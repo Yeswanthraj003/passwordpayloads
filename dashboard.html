@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard — Password Payload Generator{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-grid">
+    <!-- Stats Cards Row -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-icon generate-icon">&#9881;</div>
+            <div class="stat-info">
+                <span class="stat-value" id="totalGenerated">0</span>
+                <span class="stat-label">Total Generated</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon category-icon">&#9733;</div>
+            <div class="stat-info">
+                <span class="stat-value">9</span>
+                <span class="stat-label">Generation Categories</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon session-icon">&#128202;</div>
+            <div class="stat-info">
+                <span class="stat-value" id="sessionActions">0</span>
+                <span class="stat-label">Session Actions</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon secure-icon">&#128274;</div>
+            <div class="stat-info">
+                <span class="stat-value" id="analysisCount">0</span>
+                <span class="stat-label">Analyses Run</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Access Cards -->
+    <div class="quick-access-row">
+        <div class="quick-card">
+            <div class="quick-card-header">
+                <h3>&#9881; Payload Generator</h3>
+            </div>
+            <p>Generate password-testing variations from any input text. Supports 9 different mutation categories including leetspeak, case variations, common patterns, and more.</p>
+            <a href="/generator" class="btn btn-primary">Open Generator</a>
+        </div>
+        <div class="quick-card">
+            <div class="quick-card-header">
+                <h3>&#128274; Password Analyzer</h3>
+            </div>
+            <p>Evaluate password strength with detailed metrics — character composition, weakness detection, and actionable improvement suggestions.</p>
+            <a href="/analyzer" class="btn btn-secondary">Open Analyzer</a>
+        </div>
+    </div>
+
+    <!-- Generation Categories -->
+    <div class="categories-card">
+        <div class="card-header">
+            <h3>Available Generation Categories</h3>
+        </div>
+        <div class="categories-grid">
+            <div class="category-chip">
+                <span class="chip-dot"></span>
+                Original Input
+            </div>
+            <div class="category-chip">
+                <span class="chip-dot"></span>
+                Case Variations
+            </div>
+            <div class="category-chip">
+                <span class="chip-dot"></span>
+                Numeric Suffix
+            </div>
+            <div class="category-chip">
+                <span class="chip-dot"></span>
+                Special Characters
+            </div>
+            <div class="category-chip">
+                <span class="chip-dot"></span>
+                Common Patterns
+            </div>
+            <div class="category-chip">
+                <span class="chip-dot"></span>
+                Leetspeak
+            </div>
+            <div class="category-chip">
+                <span class="chip-dot"></span>
+                Reversed
+            </div>
+            <div class="category-chip">
+                <span class="chip-dot"></span>
+                Combinations
+            </div>
+            <div class="category-chip">
+                <span class="chip-dot"></span>
+                Custom Patterns
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="activity-card">
+        <div class="card-header">
+            <h3>Recent Session Activity</h3>
+            <div class="header-actions">
+                <button class="btn btn-sm btn-ghost" id="refreshActivity">&#8635; Refresh</button>
+                <button class="btn btn-sm btn-danger" id="clearDatabaseBtn">&#128465; Clear Database</button>
+            </div>
+        </div>
+        <div class="activity-list" id="activityList">
+            <div class="activity-empty">
+                <span class="empty-icon">&#128196;</span>
+                <p>No activity yet. Start generating payloads or analysing passwords!</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    loadDashboardData();
+    document.getElementById('refreshActivity')?.addEventListener('click', loadDashboardData);
+    
+    // Clear Database / Session Activity Button
+    document.getElementById('clearDatabaseBtn')?.addEventListener('click', () => {
+        if (!confirm('Are you sure you want to clear all session activity, history, and generated logs?')) {
+            return;
+        }
+
+        fetch('/api/clear-activity', { method: 'POST' })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message || 'Database and session history cleared!');
+                    loadDashboardData();
+                } else {
+                    showToast('Failed to clear database.');
+                }
+            })
+            .catch(() => showToast('Error clearing database.'));
+    });
+});
+
+function loadDashboardData() {
+    fetch('/api/activity')
+        .then(r => r.json())
+        .then(data => {
+            if (!data.success) return;
+            const activity = data.activity || [];
+
+            // Update stat counters
+            let totalGen = 0, totalAnalysis = 0;
+            activity.forEach(a => {
+                if (a.action === 'generate') totalGen += (a.total_generated || 0);
+                if (a.action === 'analyze') totalAnalysis++;
+            });
+
+            document.getElementById('totalGenerated').textContent = totalGen;
+            document.getElementById('sessionActions').textContent = activity.length;
+            document.getElementById('analysisCount').textContent = totalAnalysis;
+
+            // Populate activity list
+            const list = document.getElementById('activityList');
+            if (activity.length === 0) {
+                list.innerHTML = `
+                    <div class="activity-empty">
+                        <span class="empty-icon">&#128196;</span>
+                        <p>No activity yet. Start generating payloads or analysing passwords!</p>
+                    </div>`;
+                return;
+            }
+
+            list.innerHTML = activity.reverse().map(a => {
+                if (a.action === 'generate') {
+                    return `<div class="activity-item">
+                        <span class="activity-icon generate-act">&#9881;</span>
+                        <div class="activity-detail">
+                            <span class="activity-title">Payload Generation</span>
+                            <span class="activity-meta">${a.total_generated} candidates &middot; ${a.categories_used} categories &middot; Input length: ${a.input_length}</span>
+                        </div>
+                        <span class="activity-time">${a.timestamp}</span>
+                    </div>`;
+                } else {
+                    return `<div class="activity-item">
+                        <span class="activity-icon analyze-act">&#128274;</span>
+                        <div class="activity-detail">
+                            <span class="activity-title">Password Analysis</span>
+                            <span class="activity-meta">Password length: ${a.password_length} characters</span>
+                        </div>
+                        <span class="activity-time">${a.timestamp}</span>
+                    </div>`;
+                }
+            }).join('');
+        })
+        .catch(() => {});
+}
+</script>
+{% endblock %}

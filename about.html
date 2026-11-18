@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block title %}About — Password Payload Generator{% endblock %}
+{% block page_title %}About This Project{% endblock %}
+
+{% block content %}
+<div class="about-container">
+
+    <!-- Hero -->
+    <div class="about-hero">
+        <div class="hero-icon">&#9741;</div>
+        <h2>Password Payload Generator</h2>
+        <p class="hero-subtitle">A Professional Cybersecurity Educational Tool</p>
+        <span class="version-badge">v1.0.0</span>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="disclaimer-card">
+        <div class="card-header">
+            <h3>&#9888; Important Disclaimer</h3>
+        </div>
+        <div class="disclaimer-body">
+            <p>
+                This application is designed <strong>exclusively</strong> for:
+            </p>
+            <ul>
+                <li>Authorized cybersecurity education and training</li>
+                <li>Password-strength auditing in controlled environments</li>
+                <li>Authorized penetration-testing labs with explicit written permission</li>
+            </ul>
+            <p class="disclaimer-warning">
+                <strong>Unauthorized use of this tool against systems you do not own or have explicit
+                written permission to test is illegal and unethical.</strong>
+                The developers assume no liability for misuse.
+            </p>
+        </div>
+    </div>
+
+    <!-- What It Does -->
+    <div class="about-card">
+        <div class="card-header">
+            <h3>&#128161; What This Tool Does</h3>
+        </div>
+        <div class="about-body">
+            <p>
+                The Password Payload Generator accepts a word, name, or sample password and
+                produces a comprehensive set of password-testing candidates using multiple
+                transformation techniques commonly studied in cybersecurity courses.
+            </p>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <span class="feature-icon">&#9881;</span>
+                    <h4>Payload Generation</h4>
+                    <p>9 categories of password mutations including case, numeric, special chars, leetspeak, reverse, and custom patterns.</p>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">&#128274;</span>
+                    <h4>Password Analysis</h4>
+                    <p>Detailed strength evaluation with scoring, weakness detection, and improvement suggestions.</p>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">&#128737;</span>
+                    <h4>Privacy First</h4>
+                    <p>All processing happens in-memory. No passwords are stored, logged, or transmitted to external services.</p>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">&#11015;</span>
+                    <h4>Export Results</h4>
+                    <p>Download generated candidates as a structured TXT file for use in authorized lab environments.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- What It Does NOT Do -->
+    <div class="about-card warning-card">
+        <div class="card-header">
+            <h3>&#128683; What This Tool Does NOT Do</h3>
+        </div>
+        <div class="about-body">
+            <ul class="not-list">
+                <li>&#10060; Does NOT store or transmit user-entered passwords</li>
+                <li>&#10060; Does NOT connect to external APIs or password databases</li>
+                <li>&#10060; Does NOT include real-world credential databases</li>
+                <li>&#10060; Does NOT implement automated login attempts</li>
+                <li>&#10060; Does NOT perform unauthorized account access</li>
+                <li>&#10060; Does NOT crack, intercept, or brute-force passwords</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Tech Stack -->
+    <div class="about-card">
+        <div class="card-header">
+            <h3>&#128736; Technology Stack</h3>
+        </div>
+        <div class="about-body">
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <span class="tech-label">Backend</span>
+                    <span class="tech-value">Python 3 &middot; Flask</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-label">Frontend</span>
+                    <span class="tech-value">HTML5 &middot; CSS3 &middot; JavaScript</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-label">Typography</span>
+                    <span class="tech-value">Inter &middot; JetBrains Mono</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-label">Architecture</span>
+                    <span class="tech-value">Modular MVC &middot; REST API</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generation Categories -->
+    <div class="about-card">
+        <div class="card-header">
+            <h3>&#128218; Generation Categories Explained</h3>
+        </div>
+        <div class="about-body">
+            <div class="category-explain-list">
+                <div class="category-explain">
+                    <h4>1. Original Input</h4>
+                    <p>The base text exactly as entered — serves as the reference candidate.</p>
+                </div>
+                <div class="category-explain">
+                    <h4>2. Case Variations</h4>
+                    <p>All uppercase, all lowercase, title case, alternating case, swap case, and more.</p>
+                </div>
+                <div class="category-explain">
+                    <h4>3. Numeric Suffix</h4>
+                    <p>Appends common numbers: 1, 123, 2026, 007, 12345, etc.</p>
+                </div>
+                <div class="category-explain">
+                    <h4>4. Special Characters</h4>
+                    <p>Adds symbols as prefixes, suffixes, and wrappers: !, @, #, $, etc.</p>
+                </div>
+                <div class="category-explain">
+                    <h4>5. Common Patterns</h4>
+                    <p>Applies real-world password templates like <code>word123!</code>, <code>myword</code>, <code>word@2026</code>.</p>
+                </div>
+                <div class="category-explain">
+                    <h4>6. Leetspeak</h4>
+                    <p>Character substitutions: a→@, s→$, o→0, i→1, e→3, t→7, etc.</p>
+                </div>
+                <div class="category-explain">
+                    <h4>7. Reversed</h4>
+                    <p>Reversed text in multiple case forms, plus original+reversed combos.</p>
+                </div>
+                <div class="category-explain">
+                    <h4>8. Combinations</h4>
+                    <p>Hybrid mutations mixing leet+numbers, separators, keyboard walks, and more.</p>
+                </div>
+                <div class="category-explain">
+                    <h4>9. Custom Patterns</h4>
+                    <p>User-defined templates using <code>{input}</code>, <code>{Input}</code>, <code>{INPUT}</code> placeholders.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sample I/O -->
+    <div class="about-card">
+        <div class="card-header">
+            <h3>&#128221; Sample Input &amp; Output</h3>
+        </div>
+        <div class="about-body">
+            <div class="sample-block">
+                <h4>Input</h4>
+                <code class="sample-code">shadow</code>
+            </div>
+            <div class="sample-block">
+                <h4>Sample Output (excerpts by category)</h4>
+                <table class="sample-table">
+                    <thead>
+                        <tr><th>Category</th><th>Examples</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Original</td><td><code>shadow</code></td></tr>
+                        <tr><td>Case</td><td><code>SHADOW</code>, <code>Shadow</code>, <code>sHADOW</code>, <code>ShAdOw</code></td></tr>
+                        <tr><td>Numeric</td><td><code>shadow123</code>, <code>shadow2026</code>, <code>Shadow007</code></td></tr>
+                        <tr><td>Special</td><td><code>shadow!</code>, <code>@shadow</code>, <code>!shadow!</code></td></tr>
+                        <tr><td>Patterns</td><td><code>shadow123!</code>, <code>myshadow</code>, <code>shadowking</code></td></tr>
+                        <tr><td>Leetspeak</td><td><code>$h@d0w</code>, <code>5hadow</code>, <code>sh@dow</code></td></tr>
+                        <tr><td>Reversed</td><td><code>wodahs</code>, <code>WODAHS</code>, <code>shadowwodahs</code></td></tr>
+                        <tr><td>Combinations</td><td><code>shadow_shadow</code>, <code>$h@d0w123</code>, <code>shadowqwerty</code></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

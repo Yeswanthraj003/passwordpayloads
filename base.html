@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Password Payload Generator{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <span class="logo-icon">&#9741;</span>
+                <div class="logo-text">
+                    <span class="logo-title">PayloadGen</span>
+                    <span class="logo-subtitle">Cybersecurity Tool</span>
+                </div>
+            </div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">&#10005;</button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="/" class="nav-item {% if page == 'dashboard' %}active{% endif %}">
+                <span class="nav-icon">&#9632;</span>
+                <span class="nav-label">Dashboard</span>
+            </a>
+            <a href="/generator" class="nav-item {% if page == 'generator' %}active{% endif %}">
+                <span class="nav-icon">&#9881;</span>
+                <span class="nav-label">Payload Generator</span>
+            </a>
+            <a href="/analyzer" class="nav-item {% if page == 'analyzer' %}active{% endif %}">
+                <span class="nav-icon">&#128274;</span>
+                <span class="nav-label">Password Analyzer</span>
+            </a>
+            <a href="/about" class="nav-item {% if page == 'about' %}active{% endif %}">
+                <span class="nav-icon">&#8505;</span>
+                <span class="nav-label">About Project</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button type="button" class="btn btn-sm btn-danger sidebar-clear-btn" id="sidebarClearDbBtn" title="Clear All Session History and Activity">
+                <span>&#128465;</span> Clear Database
+            </button>
+            <div class="disclaimer-badge">
+                <span class="badge-icon">&#9888;</span>
+                <span class="badge-text">Educational Use Only</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content" id="mainContent">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle sidebar">
+                <span></span><span></span><span></span>
+            </button>
+            <h1 class="page-title">{% block page_title %}Dashboard{% endblock %}</h1>
+            <div class="topbar-actions">
+                <span class="status-indicator">
+                    <span class="status-dot"></span>
+                    Secure Session
+                </span>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <div class="content-area">
+            {% block content %}{% endblock %}
+        </div>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <p>&copy; 2026 Password Payload Generator &mdash; For Authorized Cybersecurity Education Only</p>
+        </footer>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

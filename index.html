@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+
+{% if page == 'generator' %}
+    {% set ptitle = 'Targeted Payload Generator' %}
+{% else %}
+    {% set ptitle = 'Password Analyzer' %}
+{% endif %}
+
+{% block title %}{{ ptitle }} — Password Payload Generator{% endblock %}
+{% block page_title %}{{ ptitle }}{% endblock %}
+
+{% block content %}
+
+{# ======================================================================= #}
+{#  TARGETED PAYLOAD GENERATOR SECTION                                      #}
+{# ======================================================================= #}
+{% if page == 'generator' %}
+<div class="generator-container">
+
+    <!-- Profile Input Form -->
+    <div class="input-card">
+        <div class="card-header">
+            <h3>&#9881; Target Profile & Audit Information</h3>
+            <span class="header-badge">* First Name required, others optional</span>
+        </div>
+        
+        <form id="profileForm" class="profile-form">
+            <!-- Row 1: First Name, Last Name, Nickname -->
+            <div class="form-grid-3">
+                <div class="form-group">
+                    <label for="firstName" class="form-label">First Name <span class="required-star">*</span></label>
+                    <input type="text" id="firstName" class="text-input" placeholder="" required maxlength="50" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="lastName" class="form-label">Last Name <span class="optional-tag">(optional)</span></label>
+                    <input type="text" id="lastName" class="text-input" placeholder="" maxlength="50" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="nickname" class="form-label">Nickname <span class="optional-tag">(optional)</span></label>
+                    <input type="text" id="nickname" class="text-input" placeholder="" maxlength="50" autocomplete="off">
+                </div>
+            </div>
+
+            <!-- Row 2: Date of Birth, Birth Year, Favourite Number -->
+            <div class="form-grid-3">
+                <div class="form-group">
+                    <label for="dob" class="form-label">Date of Birth <span class="optional-tag">(optional)</span></label>
+                    <input type="text" id="dob" class="text-input" placeholder="" maxlength="20" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="birthYear" class="form-label">Birth Year <span class="optional-tag">(optional)</span></label>
+                    <input type="text" id="birthYear" class="text-input" placeholder="" maxlength="4" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="favNumber" class="form-label">Favourite Number <span class="optional-tag">(optional)</span></label>
+                    <input type="text" id="favNumber" class="text-input" placeholder="" maxlength="20" autocomplete="off">
+                </div>
+            </div>
+
+            <!-- Row 3: Favourite Word & Other Non-Sensitive Sample Info -->
+            <div class="form-grid-2">
+                <div class="form-group">
+                    <label for="favWord" class="form-label">Favourite Word <span class="optional-tag">(optional)</span></label>
+                    <input type="text" id="favWord" class="text-input" placeholder="" maxlength="50" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="otherInfo" class="form-label">Other Non-Sensitive Info <span class="optional-tag">(optional)</span></label>
+                    <input type="text" id="otherInfo" class="text-input" placeholder="" maxlength="50" autocomplete="off">
+                </div>
+            </div>
+
+            <!-- Row 4: Multiple Custom Keywords (Multi-box or multiline textarea) -->
+            <div class="form-group">
+                <div class="custom-keywords-header">
+                    <label class="form-label">Custom Keywords <span class="optional-tag">(optional, add multiple keyword entries)</span></label>
+                    <button type="button" class="btn btn-sm btn-ghost" id="addKeywordBtn">+ Add Keyword Box</button>
+                </div>
+                
+                <div id="keywordsContainer" class="keywords-inputs-grid">
+                    <div class="keyword-item">
+                        <input type="text" class="text-input keyword-field" placeholder="" maxlength="40">
+                    </div>
+                    <div class="keyword-item">
+                        <input type="text" class="text-input keyword-field" placeholder="" maxlength="40">
+                    </div>
+                </div>
+
+                <details class="multiline-toggle">
+                    <summary class="toggle-link">&#9662; Or paste bulk keywords as multiline text</summary>
+                    <textarea id="customKeywordsBulk" class="text-input text-input-sm" rows="3" placeholder=""></textarea>
+                </details>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="button-row">
+                <button type="button" class="btn btn-primary btn-lg" id="generateBtn">
+                    <span class="btn-icon">&#9889;</span> Generate Payloads
+                </button>
+                <button type="button" class="btn btn-ghost btn-lg" id="clearBtn">
+                    <span class="btn-icon">&#10060;</span> Clear
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div class="loading-overlay" id="loadingOverlay" style="display:none;">
+        <div class="spinner"></div>
+        <p>Analyzing profile attributes and generating realistic candidates…</p>
+    </div>
+
+    <!-- Results Section -->
+    <div class="results-container" id="resultsContainer" style="display:none;">
+
+        <!-- Results Header -->
+        <div class="results-header">
+            <div class="results-stats">
+                <span class="stat-pill">
+                    <strong id="totalCount">0</strong> targeted payloads
+                </span>
+                <span class="stat-pill">
+                    <strong id="categoryCount">0</strong> categories
+                </span>
+            </div>
+            <div class="results-actions">
+                <input
+                    type="text"
+                    id="searchFilter"
+                    class="search-input"
+                    placeholder="&#128269; Search candidates…"
+                />
+                <select id="categoryFilter" class="select-input">
+                    <option value="all">All Categories</option>
+                </select>
+                <button class="btn btn-secondary btn-sm" id="downloadBtn">
+                    &#11015; Download TXT
+                </button>
+                <button class="btn btn-ghost btn-sm" id="copyAllBtn">
+                    &#128203; Copy All
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Grid -->
+        <div class="results-grid" id="resultsGrid"></div>
+
+    </div>
+</div>
+{% endif %}
+
+{# ======================================================================= #}
+{#  PASSWORD ANALYZER SECTION                                               #}
+{# ======================================================================= #}
+{% if page == 'analyzer' %}
+<div class="analyzer-container">
+
+    <!-- Input -->
+    <div class="input-card">
+        <div class="card-header">
+            <h3>&#128274; Analyse a Password</h3>
+        </div>
+        <p class="privacy-note">
+            <span class="privacy-icon">&#128274;</span>
+            Your password is analysed locally in memory and is <strong>never stored or transmitted</strong>.
+        </p>
+        <div class="input-group">
+            <div class="password-input-wrapper">
+                <input
+                    type="password"
+                    id="analyzerInput"
+                    class="text-input"
+                    placeholder=""
+                    maxlength="128"
+                    autocomplete="off"
+                />
+                <button class="toggle-visibility" id="toggleVisibility" aria-label="Toggle password visibility">
+                    &#128065;
+                </button>
+            </div>
+        </div>
+        <div class="button-row">
+            <button class="btn btn-primary btn-lg" id="analyzeBtn">
+                <span class="btn-icon">&#128270;</span> Analyse Password
+            </button>
+            <button class="btn btn-ghost btn-lg" id="clearAnalyzerBtn">
+                <span class="btn-icon">&#10060;</span> Clear
+            </button>
+        </div>
+    </div>
+
+    <!-- Analysis Results -->
+    <div class="analysis-results" id="analysisResults" style="display:none;">
+
+        <!-- Strength Meter -->
+        <div class="strength-card">
+            <div class="card-header">
+                <h3>Strength Assessment</h3>
+            </div>
+            <div class="strength-meter-wrapper">
+                <div class="strength-meter">
+                    <div class="strength-fill" id="strengthFill"></div>
+                </div>
+                <div class="strength-labels">
+                    <span>Very Weak</span>
+                    <span>Weak</span>
+                    <span>Medium</span>
+                    <span>Strong</span>
+                    <span>Very Strong</span>
+                </div>
+            </div>
+            <div class="strength-badge-wrapper">
+                <span class="strength-badge" id="strengthBadge">—</span>
+                <span class="strength-score">Score: <strong id="strengthScore">0</strong>/100</span>
+            </div>
+        </div>
+
+        <!-- Character Breakdown -->
+        <div class="breakdown-card">
+            <div class="card-header">
+                <h3>Character Breakdown</h3>
+            </div>
+            <div class="breakdown-grid">
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Length</span>
+                    <span class="breakdown-value" id="bLength">0</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Uppercase (A–Z)</span>
+                    <span class="breakdown-value" id="bUppercase">0</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Lowercase (a–z)</span>
+                    <span class="breakdown-value" id="bLowercase">0</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Numbers (0–9)</span>
+                    <span class="breakdown-value" id="bDigits">0</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Special Characters</span>
+                    <span class="breakdown-value" id="bSpecial">0</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Character Types Used</span>
+                    <span class="breakdown-value" id="bTypes">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weaknesses -->
+        <div class="weaknesses-card" id="weaknessesCard" style="display:none;">
+            <div class="card-header">
+                <h3>&#9888; Detected Weaknesses</h3>
+            </div>
+            <ul class="weakness-list" id="weaknessList"></ul>
+        </div>
+
+        <!-- Suggestions -->
+        <div class="suggestions-card">
+            <div class="card-header">
+                <h3>&#128161; Improvement Suggestions</h3>
+            </div>
+            <ul class="suggestion-list" id="suggestionList"></ul>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
